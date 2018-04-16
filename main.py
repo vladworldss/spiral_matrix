@@ -1,40 +1,21 @@
-
-class Coord(object):
-
-    def __init__(self, i, j, row_size, col_size):
-        self.row_size = row_size
-        self.col_size = col_size
-        self.i = i
-        self.j = j
-
-    def left(self):
-        if self.j == 0:
-            raise Exception("left boarder")
-        self.j -= 1
-
-    def down(self):
-        if self.i == self.col_size:
-            raise Exception("down boarder")
-        self.i += 1
-
-    def right(self):
-        if self.j == self.row_size:
-            raise Exception("right boarder")
-        self.j += 1
-
-    def up(self):
-        if self.i == 0:
-            raise Exception("upper boarder")
-        self.i -= 1
-
-    def curent(self):
-        return (self.i, self.j)
-
-    def __repr__(self):
-        return str((self.i, self.j))
+# coding: utf-8
+"""
+Приложение, выводящее на экран спиральную матрицу.
+"""
+from centroid import Centroid
+from matrix import Matrix
 
 
 def get_spriral_sqr_matrix(matrix):
+    """
+    Получение линейного списка сформированного спирально из квадратной матрице
+    :param matrix:
+    :return:
+    """
+
+    def get_vector_from_matrix(x, y):
+        return matrix[x][y]
+
     col_size = len(matrix)
     if not all(len(row) == col_size for row in matrix):
         raise TypeError("Must be square")
@@ -42,8 +23,8 @@ def get_spriral_sqr_matrix(matrix):
         raise TypeError("Min size = 3x3")
 
     median = int(col_size / 2)
-    centroid = Coord(median, median, col_size, col_size)
-    yield matrix[centroid.i][centroid.j]
+    centroid = Centroid(median, median, col_size, col_size)
+    yield get_vector_from_matrix(*centroid.vector)
 
     start_centroid = centroid
 
@@ -51,31 +32,31 @@ def get_spriral_sqr_matrix(matrix):
 
         # left one step always
         start_centroid.left()
-        yield matrix[start_centroid.i][start_centroid.j]
+        yield get_vector_from_matrix(*centroid.vector)
 
         # down
         down_steps = 1+2*(level-1)
         for _ in range(down_steps):
             start_centroid.down()
-            yield matrix[start_centroid.i][start_centroid.j]
+            yield get_vector_from_matrix(*centroid.vector)
 
         # right
         right_steps = 2*level
         for _ in range(right_steps):
             start_centroid.right()
-            yield matrix[start_centroid.i][start_centroid.j]
+            yield get_vector_from_matrix(*centroid.vector)
 
         # up
         up_steps = 2*level
         for _ in range(up_steps):
             start_centroid.up()
-            yield matrix[start_centroid.i][start_centroid.j]
+            yield get_vector_from_matrix(*centroid.vector)
 
         # left
         left_steps = 2*level
         for _ in range(left_steps):
             start_centroid.left()
-            yield matrix[start_centroid.i][start_centroid.j]
+            yield get_vector_from_matrix(*centroid.vector)
 
 
 def test_3_3():
@@ -103,17 +84,11 @@ def test_5_5():
     assert etalon == spiral
 
 
-def get_row():
-    return tuple(map(int, input().strip()))
-
-
 if __name__ == "__main__":
-    matrix = []
-    first_row = get_row()
-    matrix_size = len(first_row)
+    matrix = Matrix.make_matrix()
+    print("=" * matrix.size)
+    print("Your matrix:")
+    print(matrix)
 
-    matrix.append(first_row)
-    for _ in range(matrix_size-1):
-        matrix.append(get_row())
-
+    print("Answer:")
     print(" ".join((str(x) for x in get_spriral_sqr_matrix(matrix))))
