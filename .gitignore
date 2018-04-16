@@ -7,6 +7,8 @@
 *.py[co]
 .python-version
 .tox/
+.cache
+.pytest_cache
 __pycache__
 MANIFEST
 dist/

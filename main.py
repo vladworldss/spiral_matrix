@@ -6,10 +6,11 @@ from centroid import Centroid
 from matrix import Matrix
 
 
-def get_spriral_sqr_matrix(matrix):
+def gener_spriral_sqr_matrix(matrix):
     """
-    Получение линейного списка сформированного спирально из квадратной матрице
-    :param matrix:
+    Генератор линейного списка сформированного спирально из квадратной матрицы.
+
+    :param matrix: двумерный список, длина каждого члена которого == длине списка.
     :return:
     """
 
@@ -59,36 +60,27 @@ def get_spriral_sqr_matrix(matrix):
             yield get_vector_from_matrix(*centroid.vector)
 
 
-def test_3_3():
-    matrix = [
-        (1, 2, 3),
-        (4, 5, 6),
-        (7, 8, 9)
-    ]
+def spiral_matrix(matrix):
+    """
+    Получение линейной спиральной матрицы из квадратной.
 
-    spiral = " ".join((str(x) for x in get_spriral_sqr_matrix(matrix)))
-    assert spiral == "5 4 7 8 9 6 3 2 1"
-
-
-def test_5_5():
-    matrix = [
-        (1,  2,  3,  4,  5),
-        (6,  7,  8,  9,  10),
-        (11, 12, 13, 14, 15),
-        (16, 17, 18, 19, 20),
-        (21, 22, 23, 24, 25)
-    ]
-
-    etalon = "13 12 17 18 19 14 9 8 7 6 11 16 21 22 23 24 25 20 15 10 5 4 3 2 1"
-    spiral = " ".join((str(x) for x in get_spriral_sqr_matrix(matrix)))
-    assert etalon == spiral
+    :param matrix: двумерный список.
+    :return:
+    """
+    return tuple(gener_spriral_sqr_matrix(matrix))
 
 
-if __name__ == "__main__":
+def main():
     matrix = Matrix.make_matrix()
-    print("=" * matrix.size)
     print("Your matrix:")
     print(matrix)
 
+    print("-"*matrix.size)
     print("Answer:")
-    print(" ".join((str(x) for x in get_spriral_sqr_matrix(matrix))))
+
+    mtrx = spiral_matrix(matrix)
+    print(" ".join(str(x) for x in mtrx))
+
+
+if __name__ == "__main__":
+    main()
